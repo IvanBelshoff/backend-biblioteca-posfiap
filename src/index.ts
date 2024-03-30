@@ -9,9 +9,13 @@ AppDataSource.initialize().then(async () => {
     // eslint-disable-next-line quotes
     console.log(`\nBanco de dados conectado\n`);
 
-    server.listen(process.env.PORT, async () => {
-        console.log(`Servidor rodando no endereço: http://${process.env.HOST}:${process.env.PORT}\n`);
+    server.listen({
+        host: '0.0.0.0',
+        port: process.env.PORT ? Number(process.env.PORT) : 3333,
+    }, async () => {
+        console.log('Servidor rodando');
     });
+
 
 }).catch((error) => {
     console.log(error as TypeORMError);
