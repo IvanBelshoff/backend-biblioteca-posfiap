@@ -1,0 +1,543 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Documentação para as rotas relacionadas aos livros.",
+        "version": "1.0.0",
+        "title": "Backen Biblioteca Fiap",
+        "contact": {
+            "name": "Ivan Belshoff",
+            "url": "https://github.com/ivanstriker13"
+        }
+    },
+    "host": "https://backend-biblioteca-posfiap.onrender.com",
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/livros": {
+            "post": {
+                "summary": "Criar um novo livro",
+                "description": "Cria um novo livro com as informações fornecidas.",
+                "tags": ["Livros"],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/LivroRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Livro criado com sucesso",
+                        "schema": {
+                            "$ref": "#/definitions/LivroResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Obter lista de livros",
+                "description": "Obtém uma lista de todos os livros.",
+                "tags": ["Livros"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "livro",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "isbn",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de livros recuperada com sucesso",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/LivroResponse"
+                            }
+                        },
+                        "headers": {
+                            "x-total-count": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "Número total de livros"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/livros/{id}": {
+            "get": {
+                "summary": "Obter um livro pelo ID",
+                "description": "Obtém informações detalhadas de um livro pelo seu ID.",
+                "tags": ["Livros"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do livro a ser obtido",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Livro encontrado",
+                        "schema": {
+                            "$ref": "#/definitions/LivroResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Atualizar um livro pelo ID",
+                "description": "Atualiza as informações de um livro pelo seu ID.",
+                "tags": ["Livros"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do livro a ser atualizado",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/LivroRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Livro atualizado com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Excluir um livro pelo ID",
+                "description": "Exclui um livro pelo seu ID.",
+                "tags": ["Livros"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do livro a ser excluído",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Livro excluído com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/editoras": {
+            "post": {
+                "summary": "Cadastrar uma nova editora",
+                "description": "Cria uma nova editora com as informações fornecidas.",
+                "tags": ["Editoras"],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/EditoraRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Editora criada com sucesso",
+                        "schema": {
+                            "$ref": "#/definitions/EditoraResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Obter lista de editoras",
+                "description": "Obtém uma lista de todas as editoras.",
+                "tags": ["Editoras"],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de editoras recuperada com sucesso",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/EditoraResponse"
+                            }
+                        },
+                        "headers": {
+                            "x-total-count": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "Número total de editoras"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/editoras/{id}": {
+            "get": {
+                "summary": "Obter uma editora pelo ID",
+                "description": "Obtém informações detalhadas de uma editora pelo seu ID.",
+                "tags": ["Editoras"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da editora a ser obtida",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Editora encontrada",
+                        "schema": {
+                            "$ref": "#/definitions/EditoraResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Atualizar uma editora pelo ID",
+                "description": "Atualiza as informações de uma editora pelo seu ID.",
+                "tags": ["Editoras"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da editora a ser atualizada",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/EditoraRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Editora atualizada com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Excluir uma editora pelo ID",
+                "description": "Exclui uma editora pelo seu ID.",
+                "tags": ["Editoras"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da editora a ser excluída",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Editora excluída com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/editoras/livros/{id}": {
+            "patch": {
+                "summary": "Atualizar os livros de uma editora pelo ID",
+                "description": "Atualiza os livros associados a uma editora pelo seu ID.",
+                "tags": ["Editoras"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da editora cujos livros serão atualizados",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/LivroRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Livros da editora atualizados com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "LivroRequestBody": {
+            "type": "object",
+            "properties": {
+                "titulo": {
+                    "type": "string",
+                    "minLength": 5
+                },
+                "autor": {
+                    "type": "string",
+                    "minLength": 5
+                },
+                "isbn": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "ano_publicacao": {
+                    "type": "string",
+                    "format": "date"
+                }
+            },
+            "required": [
+                "titulo",
+                "autor",
+                "isbn",
+                "ano_publicacao"
+            ]
+        },
+        "LivroResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "titulo": {
+                    "type": "string"
+                },
+                "autor": {
+                    "type": "string"
+                },
+                "isbn": {
+                    "type": "string"
+                },
+                "ano_publicacao": {
+                    "type": "string",
+                    "format": "date"
+                }
+            },
+            "required": [
+                "id",
+                "titulo",
+                "autor",
+                "isbn",
+                "ano_publicacao"
+            ]
+        },
+        "ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "type": "object",
+                    "properties": {
+                        "default": {
+                            "type": "string"
+                        },
+                        "body": {
+                            "type": "object",
+                            "properties": {
+                                "titulo": {
+                                    "type": "string"
+                                },
+                                "autor": {
+                                    "type": "string"
+                                },
+                                "isbn": {
+                                    "type": "string"
+                                },
+                                "ano_publicacao": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -11,7 +11,7 @@ interface IResponseErros {
     body?: IBody;
 }
 
-export const updateById = async (id: number, livro: Omit<Livro, 'id' | 'data_criacao' | 'data_atualizacao'>): Promise<void | Error> => {
+export const updateById = async (id: number, livro: Omit<Livro, 'id' | 'data_criacao' | 'data_atualizacao' | 'editora'>): Promise<void | Error> => {
 
     try {
 

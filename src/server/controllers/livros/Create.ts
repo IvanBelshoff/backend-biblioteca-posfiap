@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 import { validation } from '../../shared/middlewares';
-import { IBodyPropsLivros, IResponseErros } from '../../shared/interfaces';
+import { IBodyPropsLivros, IResponseErrosLivros } from '../../shared/interfaces';
 import { LivrosProvider } from '../../database/providers/livros';
 
 export const createValidation = validation((getSchema) => ({
@@ -10,7 +10,8 @@ export const createValidation = validation((getSchema) => ({
         titulo: yup.string().required().min(5),
         autor: yup.string().required().min(5),
         isbn: yup.string().required().min(6),
-        ano_publicacao: yup.date().required()
+        ano_publicacao: yup.date().required(),
+        editora: yup.number().optional().min(0),
     })),
 }));
 
@@ -22,7 +23,7 @@ export const create = async (req: Request<{}, {}, IBodyPropsLivros>, res: Respon
     });
 
     if (result instanceof Error) {
-        const response: IResponseErros = JSON.parse(result.message);
+        const response: IResponseErrosLivros = JSON.parse(result.message);
         return res.status(response.status == 400 ? StatusCodes.BAD_REQUEST : StatusCodes.INTERNAL_SERVER_ERROR).json({
             errors: JSON.parse(result.message)
         });

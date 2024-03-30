@@ -4,9 +4,11 @@ import 'reflect-metadata';
 import morgan from 'morgan';
 import express from 'express';
 import bodyParser from 'body-parser';
+import swegger from 'swagger-ui-express';
 
 import './shared/services/TranslationsYup';
 import { router } from './routes';
+import swaggerDocs from './shared/services/swegger.json';
 
 const server = express();
 
@@ -34,6 +36,8 @@ server.use((req, res, next) => {
     }
     next();
 });
+
+server.use('/documentacao', swegger.serve, swegger.setup(swaggerDocs));
 
 server.use(router);
 

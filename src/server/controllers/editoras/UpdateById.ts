@@ -2,22 +2,19 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 import { validation } from '../../shared/middlewares';
-import { IBodyPropsLivros, IParamsIdGlobal, IResponseErrosLivros } from '../../shared/interfaces';
-import { LivrosProvider } from '../../database/providers/livros';
+import { IBodyPropsEditoras, IParamsIdGlobal, IResponseErrosEditoras } from '../../shared/interfaces';
+import { EditorasProvider } from '../../database/providers/editoras';
 
 export const updataByIdValidation = validation((getSchema) => ({
-    body: getSchema<IBodyPropsLivros>(yup.object().shape({
-        titulo: yup.string().required().min(3),
-        autor: yup.string().required().min(3),
-        isbn: yup.string().required().min(3),
-        ano_publicacao: yup.date().required()
+    body: getSchema<IBodyPropsEditoras>(yup.object().shape({
+        nome: yup.string().required().min(5),
     })),
     params: getSchema<IParamsIdGlobal>(yup.object().shape({
         id: yup.number().integer().required().moreThan(0),
     }))
 }));
 
-export const updateById = async (req: Request<IParamsIdGlobal, {}, IBodyPropsLivros>, res: Response) => {
+export const updateById = async (req: Request<IParamsIdGlobal, {}, IBodyPropsEditoras>, res: Response) => {
 
     if (!req.params.id) {
         return res.status(StatusCodes.BAD_REQUEST).json({
@@ -27,15 +24,10 @@ export const updateById = async (req: Request<IParamsIdGlobal, {}, IBodyPropsLiv
         });
     }
 
-    const result = await LivrosProvider.updateById(req.params.id, {
-        autor: req.body.autor,
-        isbn: req.body.isbn,
-        titulo: req.body.titulo,
-        ano_publicacao: new Date(String(req.body.ano_publicacao))
-    });
+    const result = await EditorasProvider.updateById(req.params.id, req.body);
 
     if (result instanceof Error) {
-        const response: IResponseErrosLivros = JSON.parse(result.message);
+        const response: IResponseErrosEditoras = JSON.parse(result.message);
         return res.status(response.status == 400 ? StatusCodes.BAD_REQUEST : StatusCodes.INTERNAL_SERVER_ERROR).json({
             errors: JSON.parse(result.message)
         });
