@@ -27,7 +27,7 @@ export const updateById = async (req: Request<IParamsIdGlobal, {}, IBodyPropsLiv
         });
     }
 
-    const result = await LivrosProvider.updateById(req.params.id, req.body);
+    const result = await LivrosProvider.updateById(req.params.id, { ...req.body, ano_publicacao: new Date(String(req.body.ano_publicacao)) });
 
     if (result instanceof Error) {
         const response: IResponseErros = JSON.parse(result.message);

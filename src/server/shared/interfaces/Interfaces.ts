@@ -18,3 +18,16 @@ export interface IQueryLivros {
 }
 
 export interface IParamsIdGlobal { id?: number }
+
+export interface IQueryGetAllLogs {
+    page?: number,
+    limit?: number,
+    acao?: 'GET' | 'POST' | 'DELETE' | 'UPDATE' | 'PATCH'
+    status?: number
+    metodo?: string,
+    level?: string,
+    ip_client?: string,
+    response?: string
+    data_inicial?: Date,
+    data_final?: Date
+}

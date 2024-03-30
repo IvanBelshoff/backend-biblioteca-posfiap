@@ -12,14 +12,28 @@ interface IResponseErros {
 }
 
 export const updateById = async (id: number, livro: Omit<Livro, 'id' | 'data_criacao' | 'data_atualizacao'>): Promise<void | Error> => {
+
     try {
 
-        const { isbn } = livro;
+        const { isbn, ano_publicacao } = livro;
+
+        const result = await livroRepository.findOne({
+            where: {
+                id: id
+            }
+        });
+
+        if (!result) {
+            return new Error(JSON.stringify({ status: 404, default: 'Livro não existe' }));
+        }
+
+        if (typeof ano_publicacao != 'object') {
+            return new Error(JSON.stringify({ status: 400, default: 'Formato digitado é invalido' }));
+        }
 
         const livrosCadastrados = await livroRepository.findAndCount({
             where: [
                 { isbn: isbn },
-
             ]
         });
 
@@ -44,11 +58,6 @@ export const updateById = async (id: number, livro: Omit<Livro, 'id' | 'data_cri
             return new Error(JSON.stringify(erro));
         }
 
-        const result = await livroRepository.findOne({
-            where: {
-                id: id
-            }
-        });
 
         if (result) {
             await livroRepository.update({ id: id }, {
