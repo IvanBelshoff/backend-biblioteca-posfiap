@@ -10,7 +10,7 @@ AppDataSource.initialize().then(async () => {
     console.log(`\nBanco de dados conectado\n`);
 
     server.listen(process.env.PORT, async () => {
-        console.log(`Serssvidor rodando no endereço: http://${process.env.HOST}:${process.env.PORT}\n`);
+        console.log(`Servidor rodando no endereço: http://${process.env.HOST}:${process.env.PORT}\n`);
     });
 
 }).catch((error) => {
