@@ -5,3 +5,5 @@ build/
 tmp/
 temp/
 .env
+error.log
+combined.log
